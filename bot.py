@@ -126,6 +126,15 @@ def send_imaged_message(
                     "image_url": image_url,
                     "alt_text": "image",
                 },
+                {
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": alt_text,
+                        }
+                    ]
+                }
             ],
             thread_ts=thread_ts,
         )
@@ -139,6 +148,15 @@ def send_imaged_message(
                 "text": {"type": "plain_text", "text": text, "emoji": True},
             },
             {"type": "image", "image_url": image_url, "alt_text": alt_text},
+            {
+                "type": "context",
+                "elements": [
+                    {
+                        "type": "mrkdwn",
+                        "text": alt_text,
+                    }
+                ]
+            }
         ],
     )
 
