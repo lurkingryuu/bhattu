@@ -648,8 +648,13 @@ def xkcd():
     else:
         text = ""
 
-    try:
+    HELP = "```Usage:\n\n" \
+            "- /xkcd\n" \
+            "- /xkcd <comic_number>\n" \
+            "- /xkcd random\n" \
+            "- /xkcd help```"
 
+    try:
         CURRENT = 'https://xkcd.com/info.0.json'
         response = requests.get(CURRENT)
         response.raise_for_status()
@@ -659,6 +664,9 @@ def xkcd():
         num = latest_num
         if text.lower() == 'random':
             num = random.randint(1, latest_num)
+        elif text.lower() == 'help':
+            send_chat_message_ephemeral(channel, user, HELP)
+            return Response(), 200
         elif text:
             try:
                 num = int(text)
