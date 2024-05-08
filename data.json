@@ -1,5 +1,6 @@
 {
-    "ctm": [
+    "ctm": [],
+    "exec": [
         {
             "id": "U05B0LX9C5C",
             "name": "yoganshsharma65",
@@ -61,7 +62,7 @@
             "real_name": "Keshav Prajapati"
         }
     ],
-    "exec": [
+    "advisor": [
         {
             "id": "U03M94DCATZ",
             "name": "jeffrey.samuel",
@@ -116,13 +117,6 @@
             "id": "U03NDEQTQKA",
             "name": "therohan84",
             "real_name": "Rohan Barsagade"
-        }
-    ],
-    "advisor": [
-        {
-            "id": "U026LPNJW8P",
-            "name": "sohamsendev",
-            "real_name": "Soham sen"
         },
         {
             "id": "U026UNXGV8W",
@@ -135,24 +129,9 @@
             "real_name": "Aditya Mishra"
         },
         {
-            "id": "U026YETKH1T",
-            "name": "aayushmannitish1",
-            "real_name": "Nitish Kumar"
-        },
-        {
-            "id": "U0271FGSRR8",
-            "name": "adiboy_3112",
-            "real_name": "Aditya Ranjan Jha"
-        },
-        {
             "id": "U0271MHDXNX",
             "name": "sheharyaar48",
             "real_name": "Mohammad Shehar Yaar Tausif"
-        },
-        {
-            "id": "U0271MHF683",
-            "name": "utsavmehta2002",
-            "real_name": "Utsav Mehta"
         },
         {
             "id": "U0277MFMWJG",
@@ -160,54 +139,9 @@
             "real_name": "Ikshita Agarwal"
         },
         {
-            "id": "U0277MFP51S",
-            "name": "sneaky-potato",
-            "real_name": "Ashwani Kumar Kamal"
-        },
-        {
-            "id": "U027E5EPDSM",
-            "name": "cghosh828049",
-            "real_name": "Chirag Ghosh"
-        },
-        {
-            "id": "U027E5EQZ8R",
-            "name": "mallikritwik2014",
-            "real_name": "Ritwik Ranjan Mallik"
-        },
-        {
             "id": "U027E5ESETT",
             "name": "rajivharlalka009",
             "real_name": "Rajiv Harlalka"
-        },
-        {
-            "id": "U027R6DLE0G",
-            "name": "ishanmanchanda70",
-            "real_name": "Ishan Manchanda"
-        },
-        {
-            "id": "U027R6DMS64",
-            "name": "likhithsaiganesh0",
-            "real_name": "Likhith Sai Ganesh"
-        },
-        {
-            "id": "U0100HFNL9K",
-            "name": "rajnishkush2",
-            "real_name": "Rajnish Kumar"
-        },
-        {
-            "id": "U0102P38T7Y",
-            "name": "palkitlohia2001",
-            "real_name": "Palkit Lohia"
-        },
-        {
-            "id": "U01CDGSQ4BG",
-            "name": "ananyamahato03",
-            "real_name": "Ananya Mahato"
-        },
-        {
-            "id": "U01003HJ3C4",
-            "name": "rahul.gorai.3141",
-            "real_name": "Rahul Gorai"
         }
     ]
 }
