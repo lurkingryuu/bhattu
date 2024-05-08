@@ -10,6 +10,8 @@ import threading
 from datetime import datetime
 import pytz
 from calendar import day_name
+import requests
+import random
 
 # Flask app configuration
 app = Flask(__name__)
@@ -92,6 +94,63 @@ def send_chat_message_ephemeral(channel: str, user: str, text: str):
         channel=channel,
         user=user,
         text=text
+    )
+
+
+@ratelimit_breaker
+def send_imaged_message(channel: str, text: str, image_url: str, alt_text: str = "xkcd_image" , thread_ts: str | None = None):
+    """Function to send a message to a channel
+
+    Keyword arguments:
+    channel -- Id of the channel in which the message is to be sent
+    text -- Message to be sent
+    image_url -- URL of the image to be sent
+    thread_ts -- Thread id of the message to which the message is to be sent
+
+    Returns: SlackResponse object
+    """
+
+    # sending the message to the channel
+    if thread_ts:
+        return client.chat_postMessage(
+            channel=channel,
+            text=text,
+            blocks=[
+                {
+                    "type": "header",
+                    "text": {
+                        "type": "plain_text",
+                        "text": text,
+                        "emoji": True
+                    }
+                },
+                {
+                    "type": "image",
+                    "image_url": image_url,
+                    "alt_text": "image"
+                }
+            ],
+            thread_ts=thread_ts
+        )
+
+    return client.chat_postMessage(
+        channel=channel,
+        text=text,
+        blocks=[
+            {
+                "type": "header",
+                "text": {
+                    "type": "plain_text",
+                    "text": text,
+                    "emoji": True
+                }
+            },
+            {
+                "type": "image",
+                "image_url": image_url,
+                "alt_text": alt_text
+            }
+        ]
     )
 
 
@@ -392,12 +451,7 @@ def tag():
             tag_group(user, channel, list(set(positions)), message)  # tagging the group
     except SlackApiError as e:
         # sending the error message if the group name is not valid
-        client.chat_postEphemeral(
-            channel=channel,
-            user=user,
-            text=f"Hey <@{user}>!\n"
-                f"An error occurred: {e.response['error']}"
-        )
+        print(f"Error: {e}")
 
     return response, 200
 
@@ -577,6 +631,65 @@ def bhattu_mod():
             f"Hey <@{request.form['user_id']}>!\n"
             f"Event `{sub_name}` is now set to {subscribed[sub_name]['status']}"
         )
+
+    return Response(), 200
+
+
+@app.route('/xkcd', methods=['POST'])
+def xkcd():
+    """Function to handle the /xkcd command"""
+    # extracting the data from the request
+    data = request.form
+    user = data['user_id']
+    channel = data['channel_id']
+    text = data['text'].strip().split()
+    if len(text) > 0:
+        text = text[0]
+    else:
+        text = ""
+
+    try:
+
+        CURRENT = 'https://xkcd.com/info.0.json'
+        response = requests.get(CURRENT)
+        response.raise_for_status()
+        latest = response.json()
+        latest_num = latest['num']
+
+        num = latest_num
+        if text.lower() == 'random':
+            num = random.randint(1, latest_num)
+        elif text:
+            try:
+                num = int(text)
+            except ValueError:
+                send_chat_message_ephemeral(
+                    channel, user, f"Hey <@{user}>!\nInvalid comic number. Please enter a valid comic number.")
+                return Response(), 200
+        
+        if num < 1 or num > latest_num:
+            send_chat_message_ephemeral(
+                channel, user, f"Hey <@{user}>!\nComic number out of range. Please enter a valid comic number.")
+            return Response(), 200
+        
+        URL = f'https://xkcd.com/{num}/info.0.json'
+        response = requests.get(URL)
+        response.raise_for_status()
+        comic = response.json()
+
+        send_imaged_message(
+            channel,
+            text=f'{num} | {comic["title"]}',
+            image_url=comic['img'],
+            alt_text=comic['alt']
+        )
+    
+    except SlackApiError as e:
+        print(f"Error: {e}")
+
+    except requests.exceptions.HTTPError as e:
+        send_chat_message_ephemeral(
+            channel, user, f"Hey <@{user}>!\nAn error occurred: {e}")
 
     return Response(), 200
 
