@@ -588,10 +588,4 @@ def health():
 
 
 if __name__ == '__main__':
-    while True:
-        try:
-            scheduler = threading.Thread(target=ping_scheduler)
-            scheduler.start()
-            app.run(host="0.0.0.0", port=8080)
-        except Exception as e:
-            print(e)
+    app.run(host="0.0.0.0", port=8080)
