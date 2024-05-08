@@ -21,6 +21,8 @@ dotenv.load_dotenv()
 # Initializing the Slack app client
 client = WebClient(token=os.environ['SLACK_TOKEN'])
 
+PORT = os.environ.get('PORT', 8080)
+
 
 def ratelimit_breaker(f):
     """Decorator function to handle the rate limit error"""
@@ -588,4 +590,4 @@ def health():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=PORT)
