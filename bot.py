@@ -356,37 +356,48 @@ def tag():
     undefined = []
     for group in groups.split(','):
         if group in ['ctm', 'ctms', 'fresher', 'freshers']:
-            positions.append('ctm')
+            positions.append('23')
         elif group in ['exec', 'execs', 'executive', 'executives']:
-            positions.append('exec')
+            positions.append('22')
         elif group in ['adv', 'advisor', 'advisors']:
-            # position = 'advisor'
             positions.append('advisor')
+        elif group.lower() in [f'koss-{year}' for year in range(20, 23 + 1)]:
+            positions.append(group.split('-')[1])
         else:
             undefined.append(group)
 
-    # sending the error message if the group name is not valid
-    if undefined:
+    try:
+        # sending the error message if the group name is not valid
+        if undefined:
+            client.chat_postEphemeral(
+                channel=channel,
+                user=user,
+                text=f"Hey <@{user}>!\n"
+                    f"I don't know what you mean by {', '.join(undefined)}\n"
+                    "```Usage:\n"
+                    "/tag <groups, (comma seperated. !! do not give spaces)> <message>\n"
+                    "/tag <groups, (comma seperated. !! do not give spaces)> (In this case, message will be 'Tagged "
+                    "you')\n\n"
+                    "Groups:\n"
+                    "- ctm | ctms | fresher | freshers\n"
+                    "- exec | execs | executive | executives\n"
+                    "- adv | advisor | advisors\n\n"
+                    "- koss-20 | koss-21 | koss-22 | koss-23```\n"
+                    "Message:\n"
+                    "The message can be anything you want to send to the tagged people, but if you want to send a "
+                    "message which includes tagging someone, use the format <@display name>. Just tag in the message you "
+                    "are writing and enclose it in <>. For example, if you want to tag @bhattu2, write <@bhattu2>.```"
+            )
+        else:
+            tag_group(user, channel, list(set(positions)), message)  # tagging the group
+    except SlackApiError as e:
+        # sending the error message if the group name is not valid
         client.chat_postEphemeral(
             channel=channel,
             user=user,
             text=f"Hey <@{user}>!\n"
-                 f"I don't know what you mean by {', '.join(undefined)}\n"
-                 "```Usage:\n"
-                 "/tag <groups, (comma seperated. !! do not give spaces)> <message>\n"
-                 "/tag <groups, (comma seperated. !! do not give spaces)> (In this case, message will be 'Tagged "
-                 "you')\n\n"
-                 "Groups:\n"
-                 "- ctm | ctms | fresher | freshers\n"
-                 "- exec | execs | executive | executives\n"
-                 "- adv | advisor | advisors\n\n"
-                 "Message:\n"
-                 "The message can be anything you want to send to the tagged people, but if you want to send a "
-                 "message which includes tagging someone, use the format <@display name>. Just tag in the message you "
-                 "are writing and enclose it in <>. For example, if you want to tag @bhattu2, write <@bhattu2>.```"
+                f"An error occurred: {e.response['error']}"
         )
-    else:
-        tag_group(user, channel, list(set(positions)), message)  # tagging the group
 
     return response, 200
 
@@ -570,11 +581,11 @@ def bhattu_mod():
     return Response(), 200
 
 
+@app.route('/health', methods=['GET'])
+def health():
+    print("Health check")
+    return Response(), 200
+
+
 if __name__ == '__main__':
-    while True:
-        try:
-            scheduler = threading.Thread(target=ping_scheduler)
-            scheduler.start()
-            app.run(host="0.0.0.0", port=8080)
-        except Exception as e:
-            print(e)
+    app.run(host="0.0.0.0", port=8080)
