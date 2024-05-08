@@ -744,7 +744,7 @@ def xkcd():
 
         send_imaged_message(
             channel,
-            text=f'{num} | {comic["title"]}',
+            text=f'#{num} {comic["title"]}',
             image_url=comic["img"],
             alt_text=comic["alt"],
         )
